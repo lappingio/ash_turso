@@ -1,0 +1,75 @@
+# SPDX-FileCopyrightText: 2024 AshTurso contributors <https://github.com/lappingio/ash_turso/graphs/contributors>
+#
+# SPDX-License-Identifier: MIT
+
+defmodule AshTurso.MigrationGenerator.Phase do
+  @moduledoc false
+
+  defmodule Create do
+    @moduledoc false
+    defstruct [:table, :multitenancy, operations: [], options: [], commented?: false]
+
+    import AshTurso.MigrationGenerator.Operation.Helper, only: [as_atom: 1]
+
+    def up(%{table: table, operations: operations, options: options}) do
+      opts =
+        if options[:strict?] do
+          ~s', options: "STRICT"'
+        else
+          ""
+        end
+
+      "create table(:#{as_atom(table)}, primary_key: false#{opts}) do\n" <>
+        Enum.map_join(operations, "\n", fn operation -> operation.__struct__.up(operation) end) <>
+        "\nend"
+    end
+
+    def down(%{table: table}) do
+      opts = ""
+
+      "drop table(:#{as_atom(table)}#{opts})"
+    end
+  end
+
+  defmodule Alter do
+    @moduledoc false
+    defstruct [:table, :multitenancy, operations: [], commented?: false]
+
+    import AshTurso.MigrationGenerator.Operation.Helper, only: [as_atom: 1]
+
+    def up(%{table: table, operations: operations}) do
+      body =
+        operations
+        |> Enum.map_join("\n", fn operation -> operation.__struct__.up(operation) end)
+        |> String.trim()
+
+      if body == "" do
+        ""
+      else
+        opts = ""
+
+        "alter table(:#{as_atom(table)}#{opts}) do\n" <>
+          body <>
+          "\nend"
+      end
+    end
+
+    def down(%{table: table, operations: operations}) do
+      body =
+        operations
+        |> Enum.reverse()
+        |> Enum.map_join("\n", fn operation -> operation.__struct__.down(operation) end)
+        |> String.trim()
+
+      if body == "" do
+        ""
+      else
+        opts = ""
+
+        "alter table(:#{as_atom(table)}#{opts}) do\n" <>
+          body <>
+          "\nend"
+      end
+    end
+  end
+end

@@ -210,7 +210,7 @@ defmodule AshTurso.SqlImplementation do
         acc,
         type
       )
-      when is_non_struct_map(left) or is_non_struct_map(right) do
+      when (is_map(left) and not is_struct(left)) or (is_map(right) and not is_struct(right)) do
     handle_map_comparison(query, :!=, left, right, pred_embedded?, bindings, embedded?, acc, type)
   end
 
@@ -222,7 +222,7 @@ defmodule AshTurso.SqlImplementation do
         acc,
         type
       )
-      when is_non_struct_map(left) or is_non_struct_map(right) do
+      when (is_map(left) and not is_struct(left)) or (is_map(right) and not is_struct(right)) do
     handle_map_comparison(query, :==, left, right, pred_embedded?, bindings, embedded?, acc, type)
   end
 

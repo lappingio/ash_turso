@@ -977,8 +977,8 @@ defmodule AshTurso.DataLayer do
   end
 
   defp handle_raised_error(
-         %Exqlite.Error{
-           message: "FOREIGN KEY constraint failed"
+         %EctoLibSql.Error{
+           message: "constraint failed"
          },
          stacktrace,
          context,
@@ -996,8 +996,8 @@ defmodule AshTurso.DataLayer do
   end
 
   defp handle_raised_error(
-         %Exqlite.Error{
-           message: "UNIQUE constraint failed: " <> fields
+         %EctoLibSql.Error{
+           message: "constraint failed: " <> fields
          },
          _stacktrace,
          _context,

@@ -5,7 +5,7 @@ defmodule AshTurso.MixProject do
   The Turso/libSQL data layer for Ash Framework.
   """
 
-  @version "0.1.0"
+  @version "0.1.1"
 
   def project do
     [

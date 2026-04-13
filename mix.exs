@@ -5,7 +5,7 @@ defmodule AshTurso.MixProject do
   The Turso/libSQL data layer for Ash Framework.
   """
 
-  @version "0.1.1"
+  @version "0.1.2"
 
   def project do
     [
@@ -62,7 +62,7 @@ defmodule AshTurso.MixProject do
         "Lapping IO <hello@lapping.io>"
       ],
       licenses: ["MIT"],
-      files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG* documentation),
+      files: ~w(lib .formatter.exs mix.exs README* LICENSE* CHANGELOG*),
       links: %{
         "GitHub" => "https://github.com/lappingio/ash_turso",
         "Changelog" => "https://github.com/lappingio/ash_turso/blob/main/CHANGELOG.md"

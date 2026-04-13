@@ -32,7 +32,6 @@ jobs:
         run: mix test
 
   integration:
-    if: ${{ secrets.TURSO_DATABASE_URL != '' && secrets.TURSO_AUTH_TOKEN != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -50,9 +49,14 @@ jobs:
           mix local.rebar --force
           mix deps.get
 
-      - name: Run Turso integration tests
+      - name: Run Turso integration tests (if secrets are set)
         env:
           RUN_INTEGRATION_TESTS: "true"
           TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
           TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-        run: mix test --only integration
+        run: |
+          if [ -z "$TURSO_DATABASE_URL" ] || [ -z "$TURSO_AUTH_TOKEN" ]; then
+            echo "Turso secrets are not configured; skipping integration tests."
+            exit 0
+          fi
+          mix test --only integration
